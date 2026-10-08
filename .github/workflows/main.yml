@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI/CD
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  test:
 
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,3 +24,22 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
